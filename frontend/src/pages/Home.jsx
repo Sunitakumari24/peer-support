@@ -1,4 +1,4 @@
-function Home() {
+function Home({ onNavigate }) {
 	return (
 		<div className="min-h-screen text-white">
 			<div className="notice-animate group border-b border-white/20 bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 px-4 py-2 text-center text-xs font-semibold tracking-wide text-rose-100 transition-all duration-300 hover:from-slate-800 hover:via-slate-700 hover:to-slate-800 hover:text-rose-50 sm:text-sm">
@@ -22,6 +22,12 @@ function Home() {
 					<li>Services</li>
 					<li>Resources</li>
 					<li>Contact</li>
+					<li
+						className="cursor-pointer text-rose-600 hover:underline"
+						onClick={() => onNavigate && onNavigate('profile')}
+					>
+						Profile
+					</li>
 				</ul>
 			</nav>
 
