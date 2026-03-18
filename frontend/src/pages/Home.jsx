@@ -1,4 +1,4 @@
-function Home() {
+function Home({ onNavigate }) {
 	return (
 		<div className="min-h-screen text-white">
 			<div className="notice-animate group border-b border-white/20 bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 px-4 py-2 text-center text-xs font-semibold tracking-wide text-rose-100 transition-all duration-300 hover:from-slate-800 hover:via-slate-700 hover:to-slate-800 hover:text-rose-50 sm:text-sm">
@@ -17,11 +17,17 @@ function Home() {
 			<nav className="sticky top-0 z-50 flex h-auto flex-col items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm sm:h-18.5 sm:flex-row sm:px-[6vw] sm:py-0">
 				<div className="text-xl font-extrabold tracking-wide text-rose-600">PEER SUPPORT</div>
 				<ul className="flex flex-wrap items-center justify-center gap-4 text-sm font-semibold sm:gap-8 sm:text-base">
-					<li>Home</li>
-					<li>About</li>
-					<li>Services</li>
-					<li>Resources</li>
-					<li>Contact</li>
+					<li className="cursor-pointer transition hover:text-rose-600">Home</li>
+					<li className="cursor-pointer transition hover:text-rose-600">About</li>
+					<li className="cursor-pointer transition hover:text-rose-600">Services</li>
+					<li className="cursor-pointer transition hover:text-rose-600">Resources</li>
+					<li className="cursor-pointer transition hover:text-rose-600">Contact</li>
+					<li
+						className="cursor-pointer rounded-lg bg-rose-600 px-3 py-1 text-white transition hover:bg-rose-700"
+						onClick={() => onNavigate && onNavigate('profile')}
+					>
+						Profile
+					</li>
 				</ul>
 			</nav>
 
