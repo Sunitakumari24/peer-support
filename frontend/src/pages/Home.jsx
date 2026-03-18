@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function Home() {
 	return (
 		<div className="min-h-screen text-white">
@@ -17,11 +19,27 @@ function Home() {
 			<nav className="sticky top-0 z-50 flex h-auto flex-col items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm sm:h-18.5 sm:flex-row sm:px-[6vw] sm:py-0">
 				<div className="text-xl font-extrabold tracking-wide text-rose-600">PEER SUPPORT</div>
 				<ul className="flex flex-wrap items-center justify-center gap-4 text-sm font-semibold sm:gap-8 sm:text-base">
-					<li>Home</li>
-					<li>About</li>
-					<li>Services</li>
-					<li>Resources</li>
-					<li>Contact</li>
+					<li><Link to="/" className="hover:text-rose-600 transition-colors">Home</Link></li>
+					<li><Link to="/forum" className="hover:text-rose-600 transition-colors">Forum</Link></li>
+					<li><Link to="/groups" className="hover:text-rose-600 transition-colors">Groups</Link></li>
+					<li><Link to="/resources" className="hover:text-rose-600 transition-colors">Resources</Link></li>
+					<li><Link to="/chat" className="hover:text-rose-600 transition-colors">Chat</Link></li>
+					<li>
+						<Link
+							to="/login"
+							className="rounded-lg border border-rose-600 px-4 py-1.5 text-sm font-bold text-rose-600 hover:bg-rose-50 transition"
+						>
+							Login
+						</Link>
+					</li>
+					<li>
+						<Link
+							to="/signup"
+							className="rounded-lg bg-rose-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-rose-700 transition"
+						>
+							Sign Up
+						</Link>
+					</li>
 				</ul>
 			</nav>
 
@@ -48,12 +66,18 @@ function Home() {
 					</p>
 
 					<div className="mt-6 flex gap-4">
-						<button className="cursor-pointer rounded-lg bg-rose-600 px-5 py-3 text-base font-bold text-white transition hover:bg-rose-700">
+						<Link
+							to="/signup"
+							className="cursor-pointer rounded-lg bg-rose-600 px-5 py-3 text-base font-bold text-white transition hover:bg-rose-700"
+						>
 							Join Now
-						</button>
-						<button className="cursor-pointer rounded-lg border border-white/50 bg-transparent px-5 py-3 text-base font-bold text-white transition hover:bg-white/10">
+						</Link>
+						<Link
+							to="/forum"
+							className="cursor-pointer rounded-lg border border-white/50 bg-transparent px-5 py-3 text-base font-bold text-white transition hover:bg-white/10"
+						>
 							Learn More
-						</button>
+						</Link>
 					</div>
 				</div>
 
