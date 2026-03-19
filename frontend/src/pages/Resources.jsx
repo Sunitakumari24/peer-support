@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Search, 
   Bookmark, 
@@ -16,7 +17,8 @@ import {
   GraduationCap,
   Scale,
   Sparkles,
-  PlayCircle
+  PlayCircle,
+  Play
 } from 'lucide-react';
 
 
@@ -72,66 +74,60 @@ const App = () => {
           </div>
         </header>
 
-        {/* Scrollable Content Area */}
-  <div className="flex-1 overflow-y-auto pb-36 hide-scrollbar px-2 sm:px-6 relative z-10 space-y-10">
-          
-          {/* Featured Video / Daily Quote */}
-          <section className="mt-2">
-            <div className="bg-gradient-to-br from-black/80 via-red-900/60 to-red-800 rounded-2xl p-6 text-white relative overflow-hidden group shadow-2xl shadow-black/60">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-all duration-500"></div>
-              <div className="relative z-10">
-                <div className="bg-white/10 backdrop-blur-md w-fit px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2 border border-white/10">
-                  <PlayCircle size={12} className="text-pink-400" /> Watch Now
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold mb-2 leading-tight">Calm techniques to reduce stress</h2>
-                <p className="text-white/70 text-sm mb-6">Quick, guided practices to help you reset and focus.</p>
-                <button className="bg-red-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold hover:bg-red-700 transition-colors active:scale-95">
+        {/* Featured Hero Section (red hero matching screenshot) */}
+        <section className="relative mt-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-red-900 via-red-700 to-red-600 p-8 md:p-12 text-white shadow-2xl"
+          >
+            {/* Decorative shapes */}
+            <div className="absolute top-[-8%] right-[-6%] w-72 h-72 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-[-12%] left-[-6%] w-60 h-60 bg-black/20 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 max-w-4xl">
+              <div className="inline-flex items-center gap-2 px-4 py-1 bg-black/30 rounded-full text-xs font-semibold mb-4">
+                <span className="w-2 h-2 rounded-full bg-red-300 animate-pulse inline-block" /> WATCH NOW
+              </div>
+
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4">
+                Calm techniques to reduce stress
+              </h2>
+
+              <p className="text-sm md:text-base text-white/80 mb-8 max-w-2xl">
+                Quick, guided practices to help you reset and focus.
+              </p>
+
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => { /* TODO: wire modal open */ }}
+                  className="inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full px-6 py-3 shadow-lg transition transform active:scale-[0.98]"
+                >
                   Start Relaxing
+                </button>
+
+                <button
+                  onClick={() => {/* optional preview action */}}
+                  className="inline-flex items-center gap-2 bg-black/20 text-white text-sm rounded-full px-4 py-2 border border-white/10 hover:bg-black/30 transition"
+                >
+                  <Play className="w-4 h-4" /> Watch preview
                 </button>
               </div>
             </div>
-          </section>
 
-          {/* Quick Categories */}
-          <section>
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg sm:text-xl font-bold text-white">Browse Topics</h3>
-              <button className="text-[10px] font-bold text-red-400 uppercase tracking-widest hover:underline">Explore All</button>
+            {/* Right-side rounded accent image (use public image at /images/hero-screenshot.png) */}
+            <div className="hidden lg:block absolute right-8 top-1/2 -translate-y-1/2">
+              <div className="w-96 h-44 rounded-[1.5rem] overflow-hidden shadow-inner border border-white/10 bg-black/20">
+                <img src="/images/hero-screenshot.png" alt="hero" className="w-full h-full object-cover" />
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {categories.map((cat, i) => (
-                <div key={i} className={`${cat.bg} ${cat.border} p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer group border`}>
-                  <div className={`bg-white/5 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-transform ${cat.color}`}>
-                    {cat.icon}
-                  </div>
-                  <h4 className="font-bold text-sm text-white mb-1">{cat.title}</h4>
-                  <p className="text-[12px] text-white/70 font-medium leading-tight">{cat.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Recommended Horizontal Scroller */}
-          <section>
-            <h3 className="text-lg font-bold text-slate-900 mb-5">Personalized for You</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                { title: "Yoga for Anxiety", min: "10", color: "bg-rose-100/50" },
-                { title: "Mindful Eating", min: "5", color: "bg-sky-100/50" },
-                { title: "Leadership 101", min: "15", color: "bg-emerald-100/50" }
-              ].map((item, i) => (
-                <div key={i} className={`p-6 rounded-2xl bg-white/5 border border-white/10 overflow-hidden group`}>{/* card */}
-                  <div className="bg-white/10 absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-30" />
-                  <h4 className="font-bold text-sm text-white mb-2 leading-tight">{item.title}</h4>
-                  <p className="text-[12px] text-white/70 font-medium flex items-center gap-2"><Star size={12} className="text-yellow-400" /> {item.min} min</p>
-                </div>
-              ))}
-            </div>
-          </section>
+          </motion.div>
+        </section>
 
           {/* Detailed Resource Cards */}
           <section className="space-y-4">
             <h3 className="text-lg font-bold text-white mb-5">Popular Articles</h3>
+
             {popular.map((item) => (
               <div key={item.id} className="bg-white/5 p-4 rounded-2xl border border-white/10 shadow-sm hover:shadow-md transition-all flex gap-4 group cursor-pointer active:scale-[0.98]">
                 <div className={`w-24 h-24 ${item.color} rounded-xl flex-shrink-0 flex items-center justify-center transition-transform`}>
