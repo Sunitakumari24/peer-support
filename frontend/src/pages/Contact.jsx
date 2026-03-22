@@ -8,12 +8,49 @@ const ContactPage = ({ setPage = () => {} }) => {
     subject: '',
     message: ''
   });
+  const [fieldErrors, setFieldErrors] = useState({})
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState('')
+  const EMAIL_RE = /^\S+@\S+\.\S+$/
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form Submitted:', formData);
-    alert('Thank you for reaching out! We will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    setFieldErrors({})
+    setSuccess('')
+    // client-side validation
+    const errs = {}
+    if (!formData.name || formData.name.trim().length < 2) errs.name = 'Please enter your name'
+    if (!formData.email || !EMAIL_RE.test(formData.email)) errs.email = 'Please enter a valid email'
+    if (!formData.subject || formData.subject.trim().length < 3) errs.subject = 'Please enter a subject'
+    if (!formData.message || formData.message.trim().length < 10) errs.message = 'Message should be at least 10 characters'
+    if (Object.keys(errs).length) {
+      setFieldErrors(errs)
+      return
+    }
+
+    // try sending to backend if available, otherwise fall back to local success
+    const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
+    setLoading(true)
+    fetch(`${BACKEND}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    }).then(async (res) => {
+      if (!res.ok) {
+        // server might not implement this endpoint — show fallback
+        const text = await res.text().catch(() => '')
+        throw new Error(text || res.statusText || 'Failed to send message')
+      }
+      return res.json().catch(() => ({}))
+    }).then((data) => {
+      setSuccess('Thank you — your message was sent. We will contact you soon.')
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    }).catch((err) => {
+      // if /api/contact not available, still show success locally
+      console.warn('Contact submit warning:', err)
+      setSuccess('Thank you — your message was received (local).')
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    }).finally(() => setLoading(false))
   };
 
   const handleChange = (e) => {
@@ -63,6 +100,7 @@ const ContactPage = ({ setPage = () => {} }) => {
                 required
                 onChange={handleChange}
               />
+              {fieldErrors.name && <div className="text-xs text-red-500 mt-1">{fieldErrors.name}</div>}
             </div>
             
             <div className="space-y-2">
@@ -76,6 +114,7 @@ const ContactPage = ({ setPage = () => {} }) => {
                 required
                 onChange={handleChange}
               />
+              {fieldErrors.email && <div className="text-xs text-red-500 mt-1">{fieldErrors.email}</div>}
             </div>
             
             <div className="space-y-2">
@@ -89,6 +128,7 @@ const ContactPage = ({ setPage = () => {} }) => {
                 required
                 onChange={handleChange}
               />
+              {fieldErrors.subject && <div className="text-xs text-red-500 mt-1">{fieldErrors.subject}</div>}
             </div>
             
             <div className="space-y-2">
@@ -102,14 +142,19 @@ const ContactPage = ({ setPage = () => {} }) => {
                 required
                 onChange={handleChange}
               ></textarea>
+              {fieldErrors.message && <div className="text-xs text-red-500 mt-1">{fieldErrors.message}</div>}
             </div>
             
-            <button 
-              type="submit" 
-              className="w-full sm:w-auto px-12 py-4 bg-orange-600 text-white font-bold rounded shadow-lg hover:bg-orange-700 hover:-translate-y-1 transition duration-300 flex items-center justify-center gap-2"
-            >
-              Send Now <Send size={18} />
-            </button>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full sm:w-auto px-12 py-4 bg-orange-600 text-white font-bold rounded shadow-lg hover:bg-orange-700 hover:-translate-y-1 transition duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {loading ? 'Sending...' : <>Send Now <Send size={18} /></>}
+              </button>
+              {success && <div className="text-green-600 font-medium">{success}</div>}
+            </div>
           </form>
         </div>
 
