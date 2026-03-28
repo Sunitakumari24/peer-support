@@ -1,207 +1,143 @@
-import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
+import { Phone, Mail, MapPin, Send, X } from 'lucide-react'
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
-const ContactPage = ({ setPage = () => {} }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [fieldErrors, setFieldErrors] = useState({})
+export default function ContactPage() {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
+  const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState('')
+  const [toast, setToast] = useState('')
   const EMAIL_RE = /^\S+@\S+\.\S+$/
+  const PHONE_RE = /^[0-9+\-\s()]{6,20}$/
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setFieldErrors({})
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setErrors({})
     setSuccess('')
-    // client-side validation
     const errs = {}
-    if (!formData.name || formData.name.trim().length < 2) errs.name = 'Please enter your name'
-    if (!formData.email || !EMAIL_RE.test(formData.email)) errs.email = 'Please enter a valid email'
-    if (!formData.subject || formData.subject.trim().length < 3) errs.subject = 'Please enter a subject'
-    if (!formData.message || formData.message.trim().length < 10) errs.message = 'Message should be at least 10 characters'
-    if (Object.keys(errs).length) {
-      setFieldErrors(errs)
-      return
-    }
+    if (!form.name || form.name.trim().length < 2) errs.name = 'Please enter your name'
+    if (!form.email || !EMAIL_RE.test(form.email)) errs.email = 'Please enter a valid email'
+    if (form.phone && !PHONE_RE.test(form.phone)) errs.phone = 'Please enter a valid phone number'
+    if (!form.message || form.message.trim().length < 10) errs.message = 'Message should be at least 10 characters'
+    if (Object.keys(errs).length) return setErrors(errs)
 
-    // try sending to backend if available, otherwise fall back to local success
-    const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
     setLoading(true)
-    fetch(`${BACKEND}/api/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    }).then(async (res) => {
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, subject: 'Contact form', message: form.message })
+      })
       if (!res.ok) {
-        // server might not implement this endpoint — show fallback
-        const text = await res.text().catch(() => '')
-        throw new Error(text || res.statusText || 'Failed to send message')
+        const body = await res.json().catch(() => ({}))
+        throw new Error((body && body.message) || 'Failed to submit')
       }
-      return res.json().catch(() => ({}))
-    }).then((data) => {
-      setSuccess('Thank you — your message was sent. We will contact you soon.')
-      setFormData({ name: '', email: '', subject: '', message: '' })
-    }).catch((err) => {
-      // if /api/contact not available, still show success locally
-      console.warn('Contact submit warning:', err)
-      setSuccess('Thank you — your message was received (local).')
-      setFormData({ name: '', email: '', subject: '', message: '' })
-    }).finally(() => setLoading(false))
-  };
+      await res.json().catch(() => ({}))
+      setSuccess('Thanks — we received your message. Our team will contact you shortly.')
+      setToast('Thanks — we received your message. Our team will contact you shortly.')
+      setForm({ name: '', email: '', phone: '', message: '' })
+    } catch (err) {
+      console.error('Contact submit error', err)
+      setSuccess('Thanks — we received your message (offline).')
+      setToast('Thanks — we received your message (offline).')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
+  useEffect(() => {
+    if (success) {
+      const t = setTimeout(() => setSuccess(''), 6000)
+      return () => clearTimeout(t)
+    }
+  }, [success])
+
+  useEffect(() => {
+    if (!toast) return
+    const t = setTimeout(() => setToast(''), 4500)
+    return () => clearTimeout(t)
+  }, [toast])
 
   return (
-    <div className="min-h-screen bg-white font-sans text-gray-800">
-      {/* Navbar is provided by the app-level shared Navbar; removed local nav to avoid duplicate */}
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
+      <Navbar />
+      <div className="flex-1 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center filter brightness-50" />
+        <div className="relative z-10">
+          <div className="mx-auto max-w-6xl px-6 py-28">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div className="lg:pr-12">
+                <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Need someone to talk to?</h1>
+                <p className="mt-4 text-slate-200 max-w-xl">We're here to support you. Share your concerns and we'll reach back within 24–48 hours. For immediate help, use the phone option.</p>
 
-      {/* --- Hero Section --- */}
-      <section className="relative h-[300px] flex flex-col items-center justify-center text-white overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center" 
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')` }}
-        >
-          <div className="absolute inset-0 bg-black/60"></div>
-        </div>
-        
-        <div className="relative z-10 text-center px-4">
-          <h1 className="text-5xl font-bold mb-2">Contact Us</h1>
-          <p className="text-lg opacity-90 text-orange-500 font-medium">
-            Hamein Khushi Hogi Aapki Help Karke
-          </p>
-        </div>
-      </section>
+                <div className="mt-8 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-md bg-rose-600 text-white"><Phone size={18} /></div>
+                    <div>
+                      <div className="text-sm text-slate-200">Phone</div>
+                      <div className="font-semibold text-rose-200">+91 91529 87821</div>
+                    </div>
+                  </div>
 
-      {/* --- Main Contact Content --- */}
-      <main className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
-        
-        {/* Left Side: Form */}
-        <div>
-          <h2 className="text-4xl font-bold mb-4">Get In Touch</h2>
-          <p className="text-gray-500 mb-8 max-w-lg">
-            Hum aapki help ke liye hamesha taiyar hain. Neeche diye gaye form ko bharein aur hamari team aapse jald hi sampark karegi.
-          </p>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-semibold uppercase text-gray-500 tracking-wider">Name</label>
-              <input 
-                type="text" 
-                id="name"
-                value={formData.name}
-                placeholder="Apna Naam..."
-                className="w-full p-4 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
-                required
-                onChange={handleChange}
-              />
-              {fieldErrors.name && <div className="text-xs text-red-500 mt-1">{fieldErrors.name}</div>}
-            </div>
-            
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-semibold uppercase text-gray-500 tracking-wider">Email</label>
-              <input 
-                type="email" 
-                id="email"
-                value={formData.email}
-                placeholder="example@yourmail.com"
-                className="w-full p-4 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
-                required
-                onChange={handleChange}
-              />
-              {fieldErrors.email && <div className="text-xs text-red-500 mt-1">{fieldErrors.email}</div>}
-            </div>
-            
-            <div className="space-y-2">
-              <label htmlFor="subject" className="text-sm font-semibold uppercase text-gray-500 tracking-wider">Subject</label>
-              <input 
-                type="text" 
-                id="subject"
-                value={formData.subject}
-                placeholder="Kis Baare Mein..."
-                className="w-full p-4 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
-                required
-                onChange={handleChange}
-              />
-              {fieldErrors.subject && <div className="text-xs text-red-500 mt-1">{fieldErrors.subject}</div>}
-            </div>
-            
-            <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-semibold uppercase text-gray-500 tracking-wider">Message</label>
-              <textarea 
-                id="message"
-                rows="4"
-                value={formData.message}
-                placeholder="Apna Message Likhein..."
-                className="w-full p-4 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 transition resize-none"
-                required
-                onChange={handleChange}
-              ></textarea>
-              {fieldErrors.message && <div className="text-xs text-red-500 mt-1">{fieldErrors.message}</div>}
-            </div>
-            
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-full sm:w-auto px-12 py-4 bg-orange-600 text-white font-bold rounded shadow-lg hover:bg-orange-700 hover:-translate-y-1 transition duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {loading ? 'Sending...' : <>Send Now <Send size={18} /></>}
-              </button>
-              {success && <div className="text-green-600 font-medium">{success}</div>}
-            </div>
-          </form>
-        </div>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-md bg-rose-600 text-white"><Mail size={18} /></div>
+                    <div>
+                      <div className="text-sm text-slate-200">Email</div>
+                      <div className="font-semibold text-rose-200">support@peersupport.example</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        {/* Right Side: Info Cards */}
-        <div className="flex flex-col gap-6">
-          {/* Phone Card */}
-          <div className="bg-gray-50 p-8 rounded shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
-            <div className="bg-white p-4 rounded-full text-orange-600 shadow-sm mb-4 border border-gray-100">
-              <Phone size={28} />
-            </div>
-            <h3 className="text-xl font-bold mb-2 text-gray-800">Phone Number</h3>
-            <p className="text-gray-600 font-medium">207-8767-452</p>
-          </div>
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-br from-slate-800/60 to-slate-900/60 blur-lg rounded-2xl" />
+                <div className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 p-6 lg:p-10">
+                  <h3 className="text-lg font-bold">Send us a message</h3>
+                  <p className="text-sm text-slate-300 mt-1">Confidential — we read every message.</p>
 
-          {/* Email Card */}
-          <div className="bg-gray-50 p-8 rounded shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
-            <div className="bg-white p-4 rounded-full text-orange-600 shadow-sm mb-4 border border-gray-100">
-              <Mail size={28} />
-            </div>
-            <h3 className="text-xl font-bold mb-2 text-gray-800">Email Address</h3>
-            <p className="text-gray-600 font-medium">support@yoursite.com</p>
-          </div>
+                  <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+                    <input name="name" value={form.name} onChange={handleChange} placeholder="Full name" className="w-full rounded-md bg-transparent border border-white/20 px-4 py-3 placeholder:text-slate-400 text-white focus:outline-none focus:ring-2 focus:ring-rose-300" />
+                    <input name="email" value={form.email} onChange={handleChange} placeholder="Email" className="w-full rounded-md bg-transparent border border-white/20 px-4 py-3 placeholder:text-slate-400 text-white focus:outline-none focus:ring-2 focus:ring-rose-300" />
+                    <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone (optional)" className="w-full rounded-md bg-transparent border border-white/20 px-4 py-3 placeholder:text-slate-400 text-white focus:outline-none focus:ring-2 focus:ring-rose-300" />
+                    <textarea name="message" value={form.message} onChange={handleChange} rows={5} placeholder="How can we help?" className="w-full rounded-md bg-transparent border border-white/20 px-4 py-3 placeholder:text-slate-400 text-white focus:outline-none focus:ring-2 focus:ring-rose-300" />
 
-          {/* Location Card */}
-          <div className="bg-gray-50 p-8 rounded shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
-            <div className="bg-white p-4 rounded-full text-orange-600 shadow-sm mb-4 border border-gray-100">
-              <MapPin size={28} />
+                    <div className="flex items-center gap-3 mt-2">
+                     <button type="submit" disabled={loading} className="inline-flex items-center gap-2 rounded-full bg-rose-600 px-5 py-2 text-white font-semibold hover:bg-rose-700 transition">
+                        <Send size={16} />
+                        <span>{loading ? 'Sending…' : 'Send message'}</span>
+                      </button>
+                      {success && <div className="text-sm text-emerald-300 font-medium">{success}</div>}
+                    </div>
+                    {Object.keys(errors).length > 0 && (
+                      <ul className="text-sm text-rose-300 mt-2 list-disc pl-5">
+                        {Object.entries(errors).map(([k, v]) => (
+                          <li key={k}>{v}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </form>
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl font-bold mb-2 text-gray-800">Our Location</h3>
-            <p className="text-gray-600 font-medium">2443 Oak Ridge, Omaha, QA 45065</p>
           </div>
         </div>
-      </main>
 
-      {/* --- Map Section --- */}
-      <section className="w-full h-[450px] bg-gray-200 mt-8">
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3105.150381922348!2d-77.03847382415174!3d38.8976763!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7b7bcdecbb1df%3A0x715969d86d0b725!2sThe%20White%20House!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
-          className="w-full h-full border-0 grayscale hover:grayscale-0 transition duration-700"
-          allowFullScreen="" 
-          loading="lazy"
-        ></iframe>
-      </section>
-      
-      {/* Footer is rendered at the app level via `components/Footer.jsx` */}
+        {toast && (
+          <div className="fixed right-6 top-6 z-50">
+           <div className="flex items-center gap-3 rounded-full bg-rose-600 px-5 py-3 text-white shadow-2xl">
+              <div className="font-semibold">{toast}</div>
+              <button onClick={() => setToast('')} className="rounded-full bg-white/20 p-1"><X size={16} /></button>
+            </div>
+          </div>
+        )}
+      </div>
+      <Footer />
     </div>
-  );
-};
-
-export default ContactPage;
+  )
+}

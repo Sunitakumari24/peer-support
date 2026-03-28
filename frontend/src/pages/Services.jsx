@@ -35,7 +35,7 @@ const Services = () => {
   // State for AI Chat
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { role: 'bot', text: 'Namaste! Main aapka AI Buddy hoon. Aap kaisa feel kar rahi hain? 💜' }
+    { role: 'bot', text: 'Hello! I am your AI Buddy. How are you feeling today? 💜' }
   ]);
   const [chatInput, setChatInput] = useState("");
 
@@ -45,18 +45,20 @@ const Services = () => {
 
   // State for Anonymous Posts
   const [posts, setPosts] = useState([
-    { id: 1, text: "Kya kisi aur ko bhi exams se pehle bahut anxiety hoti hai? 😔", likes: 12 },
-    { id: 2, text: "Aaj ka din bahut accha tha, maine meditation try kiya! ✨", likes: 24 }
+    { id: 1, text: "Kya kisi aur ko bhi exams se pehle bahut anxiety hoti hai? 😔", likes: 12, replies: [] },
+    { id: 2, text: "Aaj ka din bahut accha tha, maine meditation try kiya! ✨", likes: 24, replies: [] }
   ]);
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState("");
   const [newPostText, setNewPostText] = useState("");
 
   // 1. Daily Motivation Logic
   const [motivation, setMotivation] = useState("");
   useEffect(() => {
     const quotes = [
-      "Aap jitna sochte hain, usse kahin zyada mazboot hain. 💜",
+      "You are much stronger than you think. 💜",
       "Be kind to your mind.",
-      "Aapka ek chhota kadam badi tabdeeli la sakta hai.",
+      "A small step from you can bring a big change.",
       "Believe in yourself, princess. ✨"
     ];
     setMotivation(quotes[Math.floor(Math.random() * quotes.length)]);
@@ -76,19 +78,19 @@ const Services = () => {
     setChatInput("");
 
     setTimeout(() => {
-      let response = "Main samajh sakti hoon. Kya aap is baare mein aur batana chahengi?";
-      if (chatInput.toLowerCase().includes("sad")) response = "Mujhe bura laga sunkar, par yaad rakhein main aapke saath hoon. 🫂";
-      if (chatInput.toLowerCase().includes("help")) response = "Zarur! Aap hamare Emergency section ya Counseling tools ka use kar sakti hain.";
+      let response = "I understand. Would you like to share more about it?";
+      if (chatInput.toLowerCase().includes("sad")) response = "I'm sorry to hear that, but remember I am here for you. 🫂";
+      if (chatInput.toLowerCase().includes("help")) response = "Of course! You can use our Emergency section or Counseling tools for support.";
       setChatMessages(prev => [...prev, { role: 'bot', text: response }]);
     }, 800);
   };
 
   // 4. Mental Health Quiz Logic
   const questions = [
-    "Kya aapko neend aane mein mushkil hoti hai?",
-    "Kya aap bina wajah chinta mehsoos karti hain?",
-    "Kya aapko kaam mein dhyan lagane mein dikkat hoti hai?",
-    "Kya aap aksar thaka hua mehsoos karti hain?"
+    "Do you have trouble falling asleep?",
+    "Do you often feel anxious without any reason?",
+    "Do you find it difficult to concentrate on work?",
+    "Do you often feel tired?"
   ];
 
   const handleQuizAnswer = (ans) => {
@@ -97,9 +99,9 @@ const Services = () => {
   };
 
   const getQuizResult = () => {
-    if (quizScore <= 1) return { level: "Low", color: "text-green-600", advice: "Aap acchi sthiti mein hain. Relaxation exercises jari rakhein." };
-    if (quizScore === 2) return { level: "Medium", color: "text-amber-600", advice: "Thoda stress ho sakta hai. Deep breathing aur journaling try karein." };
-    return { level: "High", color: "text-red-600", advice: "Stress level zyada hai. Professional helpline 1800-XXX-XXXX par call karein." };
+    if (quizScore <= 1) return { level: "Low", color: "text-green-600", advice: "You are in a good state. Keep practicing relaxation exercises." };
+    if (quizScore === 2) return { level: "Medium", color: "text-amber-600", advice: "You may have some stress. Try deep breathing and journaling." };
+    return { level: "High", color: "text-red-600", advice: "Your stress level is high. Please call a professional helpline at 1800-XXX-XXXX." };
   };
 
   // 5. Services Data (Including NEW Mental Health Support)
@@ -121,7 +123,7 @@ const Services = () => {
     {
       key: 'Period Support',
       title: "Period Support",
-      description: "Mahavari (periods) ke dauraan pain, mood swings, aur hygiene manage karne ke liye tips aur support. Apne periods ko bina kisi sharm ke samjhein aur manage karein.",
+      description: "Tips and support for managing pain, mood swings, and hygiene during periods. Understand and manage your periods without any shame.",
       icon: <ShieldAlert className="w-6 h-6 text-pink-500" />, 
       imageUrl: "/period.png"
     },
@@ -133,14 +135,14 @@ const Services = () => {
       imageUrl: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80"
     },
     {
-      key: 'educational-Support',
+      key: 'educational-resources',
       title: "Educational Resources",
-      description: "Access curated articles, videos, and tips on mental health, safety, and personal growth.",
+      description: "Access curated articles, videos, and tips on education, health, safety, and personal growth.",
       icon: <BookOpen className="w-6 h-6 text-blue-500" />,
       imageUrl: "/eduction.png"
     },
     {
-      key: 'self-care Support',
+      key: 'self-care',
       title: "Self-Care Tools",
       description: "Daily affirmations, journaling prompts, and tools designed to help you stay grounded.",
       icon: <Sparkles className="w-6 h-6 text-amber-500" />,
@@ -170,6 +172,9 @@ const Services = () => {
           <p className="text-sm md:text-base text-white/90 font-light italic leading-relaxed">“We are here to support, guide and empower you 💜”</p>
         </div>
       </section>
+
+
+
 
       {/* NEW: Motivation Bar */}
       <div className="max-w-6xl mx-auto px-4 mt-4">
@@ -216,7 +221,23 @@ const Services = () => {
           </div>
         </div>
 
-        {/* Mental Health Support Mini-Quiz */}
+        {/* Mental Health Support Section */}
+        <div className="bg-rose-100 rounded-2xl shadow-lg p-6 text-rose-900 relative overflow-hidden mb-4">
+          <h3 className="font-bold text-lg mb-2 flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-rose-500" /> Mental Health Support</h3>
+          <p className="text-xs mb-3">
+            Mental health is just as important as physical health. Sometimes, due to stress, anxiety, or depression, we may feel lonely or troubled. The purpose of this page is to provide you with the right information, support, and guidance. If you need help, you can talk to a trusted person or a professional without hesitation. Your feelings are important, and you are not alone.
+          </p>
+          <div className="flex items-center gap-2 mt-4 mb-1">
+            <PhoneCall className="w-4 h-4 text-rose-600" />
+            <span className="font-bold text-sm">Helpline Numbers</span>
+          </div>
+          <ul className="text-xs ml-6 list-disc">
+            <li>If you ever feel overwhelmed, anxious, or need someone to talk to, don’t hesitate to reach out. There are helpline numbers available to provide you with support and guidance. Remember, seeking help is a sign of strength, and you are not alone.</li>
+            <li>For immediate assistance or to talk to a professional, you can contact the helpline numbers listed below. Your mental health matters, and support is always available whenever you need it.</li>
+          </ul>
+        </div>
+
+        {/* Services Grid (6 Original + 1 New) */}
         <div className="bg-rose-700 rounded-2xl shadow-lg p-6 text-white relative overflow-hidden">
           <div className="relative z-10">
             <h3 className="font-bold text-lg mb-2">Mental Health Check</h3>
@@ -309,15 +330,71 @@ const Services = () => {
             <div key={post.id} className="bg-slate-800 p-5 rounded-2xl border border-rose-900/40 shadow-sm hover:border-rose-400 transition-all group">
               <p className="text-slate-100 text-sm mb-4 leading-relaxed italic">"{post.text}"</p>
               <div className="flex justify-between items-center pt-4 border-t border-rose-900/40">
-                <div className="flex gap-4">
-                  <span className="text-[10px] font-bold text-pink-400">❤️ {post.likes} Hearts</span>
-                  <button className="text-[10px] font-bold text-slate-400 hover:text-rose-400">Reply</button>
+                <div className="flex gap-4 items-center">
+                  <button
+                    className="text-[10px] font-bold text-pink-400 flex items-center gap-1 hover:text-pink-500"
+                    onClick={() => {
+                      setPosts(posts.map(p => p.id === post.id ? { ...p, likes: p.likes + 1 } : p));
+                    }}
+                  >
+                    ❤️ {post.likes} Hearts
+                  </button>
+                  <button
+                    className="text-[10px] font-bold text-slate-400 hover:text-rose-400"
+                    onClick={() => setReplyingTo(post.id)}
+                  >
+                    Reply
+                  </button>
                 </div>
                 <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button className="text-[10px] font-bold text-slate-300 hover:text-red-500 flex items-center gap-1"><Flag className="w-3 h-3" /> Report</button>
                   <button className="text-[10px] font-bold text-slate-300 hover:text-slate-600 flex items-center gap-1"><UserX className="w-3 h-3" /> Block</button>
                 </div>
               </div>
+              {/* Reply input */}
+              {replyingTo === post.id && (
+                <div className="mt-3">
+                  <input
+                    className="w-full rounded-md border border-rose-300 bg-slate-900 text-white px-3 py-2 text-xs mt-1"
+                    placeholder="Write your reply..."
+                    value={replyText}
+                    onChange={e => setReplyText(e.target.value)}
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      className="bg-rose-600 text-white px-4 py-1 rounded-full text-xs font-bold hover:bg-rose-700"
+                      onClick={() => {
+                        if (!replyText.trim()) return;
+                        setPosts(posts.map(p => p.id === post.id ? { ...p, replies: [...(p.replies || []), replyText] } : p));
+                        setReplyText("");
+                        setReplyingTo(null);
+                      }}
+                    >
+                      Post Reply
+                    </button>
+                    <button
+                      className="bg-slate-700 text-white px-4 py-1 rounded-full text-xs font-bold hover:bg-slate-800"
+                      onClick={() => {
+                        setReplyingTo(null);
+                        setReplyText("");
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+              {/* Show replies */}
+              {post.replies && post.replies.length > 0 && (
+                <div className="mt-4 border-t border-rose-900/40 pt-2">
+                  <div className="text-xs text-rose-300 font-bold mb-1">Replies:</div>
+                  <ul className="space-y-1">
+                    {post.replies.map((reply, idx) => (
+                      <li key={idx} className="text-xs text-white bg-slate-700 rounded-md px-3 py-1">{reply}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))}
         </div>

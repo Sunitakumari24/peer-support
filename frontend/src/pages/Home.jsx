@@ -1,5 +1,6 @@
-import Navbar from "../components/Navbar";
 import Footer from '../components/Footer';
+import Navbar from "../components/Navbar";
+import { Link } from 'react-router-dom';
 
 function Home() {
 	return (
@@ -16,9 +17,9 @@ function Home() {
 				<div className="absolute inset-0 bg-slate-900/55" />
 
 				<div className="relative z-10">
-					<span className="mb-4 inline-block rounded-full bg-rose-600 px-4 py-2 text-sm font-bold">
+					{/* <span className="mb-4 inline-block rounded-full bg-rose-600 px-4 py-2 text-sm font-bold">
 						Trusted Community Since 2024
-					</span>
+					</span> */}
 					<h1 className="m-0 max-w-2xl text-4xl font-extrabold leading-tight md:text-6xl">
 						Professional <span className="text-rose-500">Peer Support</span>{' '}
 						Network
@@ -29,52 +30,20 @@ function Home() {
 					</p>
 
 					<div className="mt-6 flex gap-4">
-						<button className="cursor-pointer rounded-lg bg-rose-600 px-5 py-3 text-base font-bold text-white transition hover:bg-rose-700">
-							Join Now
-						</button>
-						<button className="cursor-pointer rounded-lg border border-white/50 bg-transparent px-5 py-3 text-base font-bold text-white transition hover:bg-white/10">
-							Learn More
-						</button>
+						<Link to="/services">
+							<button className="cursor-pointer rounded-lg bg-rose-600 px-5 py-3 text-base font-bold text-white transition hover:bg-rose-700">
+								Join Now
+							</button>
+						</Link>
+						<Link to="/resources">
+							<button className="cursor-pointer rounded-lg border border-white/50 bg-transparent px-5 py-3 text-base font-bold text-white transition hover:bg-white/10">
+								Learn More
+							</button>
+						</Link>
 					</div>
 				</div>
 
-				<div className="relative z-10 rounded-2xl bg-white p-6 text-slate-900 shadow-2xl">
-					<h2 className="m-0 text-3xl font-bold">Get Free Guidance</h2>
-					<p className="mb-5 mt-2 text-slate-500">
-						Fill this quick form and we will connect you.
-					</p>
-
-					<form>
-						<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-							<input
-								type="text"
-								placeholder="Your Name"
-								className="w-full rounded-lg border border-slate-300 px-3.5 py-3 text-sm outline-none focus:border-rose-500"
-							/>
-							<input
-								type="tel"
-								placeholder="Phone Number"
-								className="w-full rounded-lg border border-slate-300 px-3.5 py-3 text-sm outline-none focus:border-rose-500"
-							/>
-							<input
-								type="email"
-								placeholder="Email Address"
-								className="w-full rounded-lg border border-slate-300 px-3.5 py-3 text-sm outline-none focus:border-rose-500 sm:col-span-2"
-							/>
-							<input
-								type="text"
-								placeholder="Your Concern"
-								className="w-full rounded-lg border border-slate-300 px-3.5 py-3 text-sm outline-none focus:border-rose-500 sm:col-span-2"
-							/>
-						</div>
-						<button
-							type="submit"
-							className="mt-4 w-full cursor-pointer rounded-lg bg-rose-600 px-5 py-3 text-base font-bold text-white transition hover:bg-rose-700"
-						>
-							Get Free Support
-						</button>
-					</form>
-				</div>
+				   {/* Guidance form removed as per user request */}
 			</section>
 
 			<section className="border-t-8 border-rose-100 bg-white px-5 py-16 text-slate-800 sm:px-[6vw] lg:py-20">
@@ -130,27 +99,15 @@ function Home() {
 
 					<div className="relative">
 						<img
-							src="https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=1300&q=80"
+							src="/mohe2.png"
 							alt="Support team and workspace"
 							className="h-full min-h-70 w-full rounded-md object-cover"
 						/>
-
-						<div className="absolute -bottom-7 left-6 rounded-2xl bg-white px-6 py-5 shadow-2xl sm:left-10">
-							<div className="flex items-center gap-3">
-								<span className="text-3xl text-rose-600">🚚</span>
-								<div>
-									<h3 className="text-4xl font-extrabold leading-none text-slate-800">
-										10,000+
-									</h3>
-									<p className="mt-1 text-slate-500">Successful Connections</p>
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 			</section>
 
-			<section className="border-t-8 border-slate-200 bg-slate-50 px-5 pb-16 pt-12 text-slate-800 sm:px-[6vw] lg:pb-20">
+		 {/* <section className="border-t-8 border-slate-200 bg-slate-50 px-5 pb-16 pt-12 text-slate-800 sm:px-[6vw] lg:pb-20">
 				<div className="mx-auto max-w-7xl">
 					<div className="text-center">
 						<span className="inline-flex rounded-full bg-slate-200 px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider text-slate-700">
@@ -163,7 +120,7 @@ function Home() {
 							Expert guidance, secure support & tailored solutions for every
 							 situation.
 						</p>
-					</div>
+					</div> 
 
 					<div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 						{[
@@ -214,108 +171,11 @@ function Home() {
 								</button>
 							</div>
 						))}
-					</div>
-				</div>
-			</section>
+					</div> 
+				 </div>
+			</section>  */}
 
-			<footer className="border-t border-slate-700 bg-slate-900 px-5 pb-8 pt-10 text-white sm:px-[6vw]">
-				<div className="mx-auto max-w-7xl">
-					<div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-						<div>
-							<h2 className="text-4xl font-extrabold leading-tight">Subscribe to our</h2>
-							<h2 className="text-4xl font-extrabold leading-tight">newsletter</h2>
-						</div>
-
-						<form className="grid w-full max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-							<input
-								type="text"
-								placeholder="First Name *"
-								className="rounded-full border border-white/45 bg-white/5 px-5 py-3 text-white placeholder:text-white/70 outline-none focus:border-rose-400"
-							/>
-							<input
-								type="text"
-								placeholder="Last Name *"
-								className="rounded-full border border-white/45 bg-white/5 px-5 py-3 text-white placeholder:text-white/70 outline-none focus:border-rose-400"
-							/>
-							<input
-								type="email"
-								placeholder="Email *"
-								className="rounded-full border border-white/45 bg-white/5 px-5 py-3 text-white placeholder:text-white/70 outline-none focus:border-rose-400"
-							/>
-							<button className="rounded-full bg-rose-600 px-5 py-3 text-lg font-bold text-white transition hover:bg-rose-700">
-								Submit
-							</button>
-						</form>
-					</div>
-
-					<div className="mt-10 h-px bg-white/20" />
-
-					<div className="grid grid-cols-1 gap-10 py-10 md:grid-cols-2 lg:grid-cols-5">
-						<div className="lg:col-span-2">
-							<h3 className="text-3xl font-extrabold">PEER SUPPORT</h3>
-							<p className="mt-4 max-w-md text-lg leading-8 text-white/90">
-								500 Montgomery Street, Suite 820
-								<br />
-								Alexandria, VA 22314
-								<br />
-								Phone: (703) 684.7722
-								<br />
-								Toll Free: (800) 969.6642
-							</p>
-							<p className="mt-6 max-w-md text-base leading-7 text-white/75">
-								©2026 Peer Support. All rights reserved. This site is protected by
-								privacy and terms policies.
-							</p>
-						</div>
-
-						<div>
-							<h4 className="text-4xl/none font-extrabold text-rose-400">Quick links</h4>
-							<ul className="mt-4 space-y-3 text-lg text-white/90">
-								<li>Contact</li>
-								<li>Donate</li>
-								<li>Careers</li>
-								<li>Financials</li>
-								<li>In the news</li>
-							</ul>
-						</div>
-
-						<div>
-							<h4 className="text-4xl/none font-extrabold text-rose-400">Learn</h4>
-							<ul className="mt-4 space-y-3 text-lg text-white/90">
-								<li>Mental health learning hub</li>
-								<li>Blog</li>
-								<li>Workplace learning hub</li>
-								<li>Research & reports</li>
-							</ul>
-						</div>
-
-						<div>
-							<h4 className="text-4xl/none font-extrabold text-rose-400">Get help</h4>
-							<ul className="mt-4 space-y-3 text-lg text-white/90">
-								<li>Call or text 988</li>
-								<li>Crisis services</li>
-								<li>Take a mental health test</li>
-								<li>Explore treatment options</li>
-							</ul>
-						</div>
-					</div>
-
-					<div className="flex flex-col gap-4 border-t border-white/20 pt-6 text-base text-white/80 md:flex-row md:items-center md:justify-between">
-						<div className="flex items-center gap-3 text-lg text-rose-400">
-							<span>f</span>
-							<span>X</span>
-							<span>▶</span>
-							<span>◎</span>
-							<span>in</span>
-						</div>
-						<div className="flex flex-wrap gap-5">
-							<span>Privacy policy</span>
-							<span>Terms of use</span>
-							<span>Site by Great Believer</span>
-						</div>
-					</div>
-				</div>
-			</footer>
+	<Footer />
 		</div>
 	)
 }

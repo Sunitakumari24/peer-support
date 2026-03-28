@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const supportContent = {
   'mental-health': {
     title: 'Mental Health Support',
-    text: '"Mental health utni hi zaruri hai jitni physical health. Kabhi-kabhi stress, anxiety, ya depression ki wajah se hum akela ya pareshan mehsoos kar sakte hain. Is page ka purpose hai aapko sahi information, support, aur guidance dena. Agar aapko help ki zarurat ho, to aap bina hesitation ke kisi trusted insaan ya professional se baat kar sakte hain. Aapki feelings important hain aur aap akela nahi hain.!"',
+    text: 'Mental health is just as important as physical health. Sometimes, due to stress, anxiety, or depression, we may feel lonely or troubled. The purpose of this page is to provide you with the right information, support, and guidance. If you need help, you can talk to a trusted person or a professional without any hesitation. Your feelings are important, and you are not alone"',
     helplines: [
       { label: 'NIMHANS', number: '080-46110007' },
       { label: 'Kiran Mental Health', number: '1800-599-0019' }
@@ -13,7 +13,7 @@ const supportContent = {
   },
   'emotional-support': {
     title: 'Emotional Support',
-    text: '"Kabhi-kabhi life me stress, tension, ya emotional problems ki wajah se hum akela mehsoos kar sakte hain. Hamara Emotional Support service ek safe aur caring space provide karta hai jahan women apni feelings share kar sakti hain aur support paa sakti hain. Hum bina judgment ke sunte hain aur aapko strong aur confident banne me madad karte hain.!"',
+    text: 'Sometimes in life, due to stress, tension, or emotional problems, we may feel lonely. Our Emotional Support service provides a safe and caring space where women can share their feelings and receive support. We listen without judgment and help you become strong and confident.',
     helplines: [
       { label: 'Snehi', number: '91-22-2772 6771' },
       { label: 'iCall', number: '9152987821' }
@@ -22,7 +22,11 @@ const supportContent = {
   },
   'Period Support': {
     title: 'Period Support',
-    text: '"Period ek natural process hai jo ladkiyon aur mahilaon me har mahine hota hai, jisme uterus ki lining blood ke roop me body se bahar nikalti hai Ye aam taur par 3–7 din tak chalta hai aur 21–35 din me repeat hota hai Is dauran weakness, mood swings aur starting days me heavy bleeding ho sakti hai Period ke time safai ka dhyan rakhna bahut zaruri hai, isliye har 4–6 ghante me pad change karna chahiye aur body clean rakhni chahiye Aaram karna, heavy kaam avoid karna aur halka exercise karna helpful hota hai Dard hone par hot water bag aur light stretching se relief milta hai Healthy diet lena zaruri hai, junk food aur stress se bachna chahiye, aur yaad rakhein period koi bimari nahi hai.!"',
+    text: `Periods are a natural process that occurs every month in girls and women, in which the lining of the uterus is shed from the body in the form of blood. It usually lasts for 3–7 days and repeats every 21–35 days. During this time, there may be weakness, mood swings, and heavy bleeding in the initial days.
+
+It is very important to maintain hygiene during periods, so pads should be changed every 4–6 hours and the body should be kept clean. Taking rest, avoiding heavy work, and doing light exercise can be helpful. In case of pain, using a hot water bag and doing light stretching can provide relief.
+
+Maintaining a healthy diet is important, and one should avoid junk food and stress. And remember, periods are not a disease.`,
     helplines: [
       { label: 'Vandrevala Foundation', number: '9999666555' }
     ],
@@ -30,7 +34,7 @@ const supportContent = {
   },
   'community-support': {
     title: 'Community Support',
-    text: '"Kya aap kabhi akela mehsoos karte hain ya kisi aise group ki talash me hain jahan log aapki situation ko samjhein? Community Support ek aisa platform hai jahan women ek dusre se connect kar sakti hain, apne experiences share kar sakti hain, aur ek dusre ko emotional aur practical support de sakti hain Yahan aapko ek caring community milegi jo aapko sunegi, samjhegi, aur mushkil waqt me aapke saath khadi rahegi. Group discussions, support sessions, aur community activities ke through aap naye logon se mil sakte hain, apna confidence badha sakte hain, aur positive environment me grow kar sakte hain Chahe aap guidance chahte ho, apni story share karna chahte ho, ya sirf kisi supportive group ka hissa banna chahte ho — hamari community aapko welcome karti hai.!"',
+    text: 'Do you ever feel lonely or are you looking for a group where people understand your situation? Community Support is a platform where women can connect with each other, share their experiences, and provide emotional and practical support. Here, you will find a caring community that will listen to you, understand you, and stand by you in difficult times. Through group discussions, support sessions, and community activities, you can meet new people, boost your confidence, and grow in a positive environment. Whether you want guidance, want to share your story, or just want to be part of a supportive group — our community welcomes you!',
     helplines: [
       { label: 'Connecting Trust', number: '9922001122' }
     ],
@@ -38,7 +42,7 @@ const supportContent = {
   },
   'educational-resources': {
     title: 'Educational Resources',
-    text: '"Kya aap apni knowledge badhana chahte hain aur life me better opportunities paana chahte hain? Educational Resources section aapko useful information, learning materials, aur practical guidance provide karta hai jo aapki personal aur professional growth me madad karega Yahan aapko different topics par easy-to-understand articles, guides, aur learning resources milenge — jaise health awareness, career guidance, skill development, aur self-improvement. Ye resources aapko naye skills seekhne, apne goals achieve karne, aur apne future ko strong banane me support karenge Chahe aap study me help chahte ho, career ke liye guidance dhoond rahe ho, ya apni daily life ko better banana chahte ho — yahan aapko sahi information aur tools milenge jo aapko confident aur independent banayenge.!"',
+    text: `Education is the foundation for a brighter future. It empowers you to think critically, solve problems, and make informed decisions in life. Through education, you gain knowledge, develop new skills, and open doors to better career and personal growth opportunities. Whether you are a student, a professional, or someone looking to learn something new, education helps you become more confident and independent. Our Educational Resources section offers articles, guides, and learning materials on a variety of topics—such as health, career guidance, skill development, and self-improvement. Remember, learning is a lifelong journey, and every step you take brings you closer to your dreams. Invest in your education and unlock your true potential!`,
     helplines: [
       { label: 'Kiran Mental Health', number: '1800-599-0019' }
     ],
@@ -46,7 +50,7 @@ const supportContent = {
   },
   'self-care-tools': {
     title: 'Self-Care Tools',
-    text: '" Kya aap apni daily life me stress, thakan, ya emotional pressure feel karte hain? Self-Care Tools section aapko simple aur practical tarike provide karta hai jisse aap apni mental aur emotional well-being ka khayal rakh sakte hain Yahan aapko easy-to-use tools aur tips milenge — jaise relaxation exercises, mood tracking, breathing techniques, aur daily self-care routines — jo aapko calm rehne, positive soch banaye rakhne, aur apni health ko better manage karne me madad karengeChahe aap busy schedule ki wajah se stressed ho, ya apne liye thoda peaceful time chahte ho — ye tools aapko small daily steps lene me guide karenge jisse aap khud ko healthy, balanced, aur confident feel kar sakein.!"',
+    text: 'Do you feel stress, fatigue, or emotional pressure in your daily life? The Self-Care Tools section provides you with simple and practical ways to take care of your mental and emotional well-being. Here, you will find easy-to-use tools and tips — such as relaxation exercises, mood tracking, breathing techniques, and daily self-care routines — that will help you stay calm, maintain a positive mindset, and better manage your health. Whether you are stressed due to a busy schedule or just want some peaceful time for yourself — these tools will guide you to take small daily steps so you can feel healthy, balanced, and confident!',
     helplines: [
       { label: 'iCall', number: '9152987821' }
     ],
