@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react'
 import Navbar from '../components/Navbar'
-import { askAi } from '../services/api';
+import { askAi } from '../services/api'
+import { useAuth } from './AuthContext'
 
 export default function Chat() {
+  const { user } = useAuth()
   const [text, setText] = useState('')
   const [messages, setMessages] = useState([
     {
@@ -43,7 +45,7 @@ export default function Chat() {
     setText('');
 
     try {
-      const res = await askAi(trimmed);
+      const res = await askAi(trimmed, user?.id);
       const peerReply = {
         id: Date.now() + 1,
         role: 'peer',

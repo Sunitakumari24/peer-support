@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
 				body: JSON.stringify({ name, email, password }),
 			})
 
-			const safeUser = data.user
+			const safeUser = data.data || data.user
 			localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser))
 			setUser(safeUser)
 			return safeUser
@@ -101,7 +101,7 @@ export function AuthProvider({ children }) {
 				body: JSON.stringify({ email, password }),
 			})
 
-			const safeUser = data.user
+			const safeUser = data.data || data.user
 			localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser))
 			setUser(safeUser)
 			return safeUser
@@ -142,7 +142,7 @@ export function AuthProvider({ children }) {
 				body: JSON.stringify({ name, email }),
 			})
 
-			const safeUser = data.user
+			const safeUser = data.data || data.user
 			localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser))
 			setUser(safeUser)
 			return safeUser

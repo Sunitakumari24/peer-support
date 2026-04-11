@@ -1,25 +1,47 @@
+
+
 import Footer from '../components/Footer';
 import Navbar from "../components/Navbar";
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+// Add images array for background slider
+const images = [
+	'/assets/images/bg1.jpg',
+	'/assets/im																																				ages/bg2.jpg',
+	'/assets/images/bg3.jpg',
+];
 
 function Home() {
+	// Add state for currentImage
+	const [currentImage, setCurrentImage] = useState(0);
+
+	// Optional: Auto-slide background images
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setCurrentImage((prev) => (prev + 1) % images.length);
+		}, 5000);
+		return () => clearInterval(interval);
+	}, []);
+
 	return (
 		<div className="min-h-screen text-white">
 			<Navbar />
 
 			<section
-				className="relative grid min-h-[calc(100vh-114px)] grid-cols-1 items-center gap-10 overflow-hidden bg-cover bg-center px-5 py-8 sm:px-[6vw] md:grid-cols-[1.1fr_0.9fr]"
+				className="relative grid min-h-[calc(100vh-114px)] grid-cols-1 items-center gap-10 overflow-hidden px-5 py-8 sm:px-[6vw] md:grid-cols-[1.1fr_0.9fr]"
 				style={{
-					backgroundImage:
-						"url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80')",
+					backgroundImage: `url('${images[currentImage]}')`,
+					backgroundPosition: 'top center',
+					backgroundRepeat: 'no-repeat',
+					backgroundSize: 'contain',
+					transition: 'background-image 0.5s ease-in-out',
+					backgroundColor: '#1e293b', // fallback color
 				}}
 			>
 				<div className="absolute inset-0 bg-slate-900/55" />
-
 				<div className="relative z-10">
-					{/* <span className="mb-4 inline-block rounded-full bg-rose-600 px-4 py-2 text-sm font-bold">
-						Trusted Community Since 2024
-					</span> */}
+					
 					<h1 className="m-0 max-w-2xl text-4xl font-extrabold leading-tight md:text-6xl">
 						Professional <span className="text-rose-500">Peer Support</span>{' '}
 						Network

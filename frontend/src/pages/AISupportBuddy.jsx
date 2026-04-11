@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAuth } from './AuthContext';
+import { askAi } from '../services/api';
 
 const initialMessages = [
   {
@@ -8,6 +10,7 @@ const initialMessages = [
 ];
 
 export default function AISupportBuddy() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,26 +23,11 @@ export default function AISupportBuddy() {
     setInput('');
     setLoading(true);
     try {
-      // Replace this with your real AI API endpoint
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_OPENAI_API_KEY',
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            { role: 'system', content: 'You are a helpful support assistant.' },
-            ...messages.map((m) => ({ role: m.role === 'bot' ? 'assistant' : 'user', content: m.text })),
-            { role: 'user', content: input },
-          ],
-        }),
-      });
-      const data = await res.json();
-      const aiText = data.choices?.[0]?.message?.content || 'Sorry, I could not understand.';
+      const res = await askAi(input, user?.id);
+      const aiText = res.reply || 'Sorry, I could not understand.';
       setMessages((prev) => [...prev, { role: 'bot', text: aiText }]);
     } catch (err) {
+      console.error('Error:', err);
       setMessages((prev) => [...prev, { role: 'bot', text: 'Sorry, there was an error. Please try again.' }]);
     } finally {
       setLoading(false);

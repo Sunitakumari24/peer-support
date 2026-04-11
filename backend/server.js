@@ -4,6 +4,8 @@ const http = require('http');
 const socketIo = require('socket.io');
 const connectDB = require('./config/db');
 
+// Import core module
+const { config, response } = require('./core');
 
 const authRoutes = require('./routes/authRoutes');
 const chatRoutes = require('./routes/chatRoutes');
@@ -15,27 +17,44 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: '*',
+    origin: config.CORS_ORIGIN,
     methods: ['GET', 'POST'],
   },
 });
 
-const PORT = process.env.PORT || 5000;
+// Use config PORT
+const PORT = config.PORT;
 
 // Connect to MongoDB
 connectDB();
 
 app.use(
 	cors({
-		origin: '*',
+		origin: config.CORS_ORIGIN,
 		methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 	})
 );
 app.use(express.json());
 
+// Health check endpoint
 app.get('/api/health', (_req, res) => {
-	res.status(200).json({ message: 'Backend is running.' });
+	response.sendSuccess(res, { 
+		status: 'running',
+		port: config.PORT,
+		environment: config.NODE_ENV,
+	}, 200, 'Backend is running');
+});
+
+// Test endpoint to check all users
+app.get('/api/test/users', async (_req, res) => {
+	try {
+		const User = require('./models/User');
+		const users = await User.find({}).select('-password');
+		response.sendSuccess(res, users, 200, `Found ${users.length} users`);
+	} catch (err) {
+		response.sendError(res, err, 500, 'Failed to fetch users');
+	}
 });
 
 
@@ -45,12 +64,22 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/aichat', aiChatRoutes);
 app.use('/api/anonchat', anonymousChatRoutes);
 
+// 404 handler
 app.use((_req, res) => {
-	res.status(404).json({ message: 'Route not found.' });
+	response.sendError(res, new Error('Route not found'), 404, 'Route not found');
+});
+
+// Error handling middleware (must be last)
+app.use((err, _req, res, _next) => {
+	console.error('❌ Error:', err.message);
+	const statusCode = err.statusCode || 500;
+	const message = err.message || 'Internal server error';
+	response.sendError(res, err, statusCode, message);
 });
 
 // Socket.io for real-time chat
 const activeUsers = new Map();
+const Message = require('./models/Message');
 
 io.on('connection', (socket) => {
 	console.log(`✅ User connected: ${socket.id}`);
@@ -63,8 +92,24 @@ io.on('connection', (socket) => {
 	});
 
 	// Send message event
-	socket.on('send-message', (data) => {
+	socket.on('send-message', async (data) => {
 		const { senderId, senderName, receiverId, content } = data;
+		
+		try {
+			// Save message to database
+			const message = new Message({
+				senderId,
+				senderName,
+				receiverId,
+				content,
+				timestamp: new Date(),
+				read: false
+			});
+			await message.save();
+			console.log('💾 Message saved to database');
+		} catch (err) {
+			console.error('❌ Error saving message:', err);
+		}
 		
 		// Broadcast to receiver if online
 		const receiverSocketId = activeUsers.get(receiverId);
@@ -122,5 +167,13 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, () => {
-	console.log(`Server running on port ${PORT}`);
+	console.log(`
+🚀 Server Configuration:
+   - Port: ${config.PORT}
+   - Environment: ${config.NODE_ENV}
+   - CORS Origin: ${config.CORS_ORIGIN}
+   - Database: ${config.MONGODB_URI.substring(0, 30)}...
+   
+✅ Server running on http://localhost:${PORT}
+	`);
 });

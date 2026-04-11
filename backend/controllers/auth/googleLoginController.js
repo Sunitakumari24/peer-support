@@ -1,33 +1,55 @@
 const { OAuth2Client } = require('google-auth-library');
 const User = require('../../models/User');
+const { response, errors, config } = require('../../core');
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const client = new OAuth2Client(config.GOOGLE_CLIENT_ID);
 
 module.exports = async function googleLoginController(req, res) {
   try {
     const { credential } = req.body;
+    
     if (!credential) {
-      return res.status(400).json({ error: 'No credential provided' });
+      throw new errors.ValidationError('No credential provided');
     }
+    
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: config.GOOGLE_CLIENT_ID,
     });
+    
     const payload = ticket.getPayload();
     const { email, name } = payload;
+    
     if (!email) {
-      return res.status(400).json({ error: 'No email found in Google account' });
+      throw new errors.ValidationError('No email found in Google account');
     }
+    
+    // Find or create user
     let user = await User.findOne({ email });
     if (!user) {
-      // Create user with random password (not used)
-      user = new User({ name: name || email, email, password: Math.random().toString(36) });
+      user = new User({ 
+        name: name || email, 
+        email, 
+        password: Math.random().toString(36) 
+      });
       await user.save();
     }
-    // You can add JWT token logic here if needed
-    res.status(200).json({ success: true, user: { id: user._id, name: user.name, email: user.email } });
+    
+    response.sendSuccess(res, 
+      { 
+        id: user._id, 
+        name: user.name, 
+        email: user.email 
+      }, 
+      200, 
+      'Google login successful'
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Google login failed' });
+    if (error.statusCode) {
+      response.sendError(res, error, error.statusCode, error.message);
+    } else {
+      response.sendError(res, error, 500, 'Google login failed');
+    }
   }
 };
