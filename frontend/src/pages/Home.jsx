@@ -1,29 +1,10 @@
+import Navbar from "../components/Navbar";
+import Footer from '../components/Footer';
+
 function Home() {
 	return (
 		<div className="min-h-screen text-white">
-			<div className="notice-animate group border-b border-white/20 bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 px-4 py-2 text-center text-xs font-semibold tracking-wide text-rose-100 transition-all duration-300 hover:from-slate-800 hover:via-slate-700 hover:to-slate-800 hover:text-rose-50 sm:text-sm">
-				<span className="text-rose-400 transition-transform duration-300 group-hover:scale-110">⚠</span>{' '}
-				Important note: This is a safe peer-support space. Please be respectful,
-				 avoid sharing personal or financial details, and if you are in immediate
-				 crisis, contact emergency help first.{' '}
-				<span className="text-rose-400 transition-transform duration-300 group-hover:scale-110">⚠</span>
-			</div>
-
-			<header className="flex h-auto flex-col items-center justify-between gap-1 bg-slate-100 px-4 py-2 text-sm text-slate-700 sm:h-10 sm:flex-row sm:px-[6vw] sm:py-0">
-				<span>peer.support@gmail.com</span>
-				<span>24x7 Community Support</span>
-			</header>
-
-			<nav className="sticky top-0 z-50 flex h-auto flex-col items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm sm:h-18.5 sm:flex-row sm:px-[6vw] sm:py-0">
-				<div className="text-xl font-extrabold tracking-wide text-rose-600">PEER SUPPORT</div>
-				<ul className="flex flex-wrap items-center justify-center gap-4 text-sm font-semibold sm:gap-8 sm:text-base">
-					<li>Home</li>
-					<li>About</li>
-					<li>Services</li>
-					<li>Resources</li>
-					<li>Contact</li>
-				</ul>
-			</nav>
+			<Navbar />
 
 			<section
 				className="relative grid min-h-[calc(100vh-114px)] grid-cols-1 items-center gap-10 overflow-hidden bg-cover bg-center px-5 py-8 sm:px-[6vw] md:grid-cols-[1.1fr_0.9fr]"
