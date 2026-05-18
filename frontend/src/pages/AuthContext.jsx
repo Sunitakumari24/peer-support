@@ -7,7 +7,9 @@ const SESSION_KEY = 'peer_support_session'
 const API_BASE = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 async function apiRequest(path, options = {}) {
-	const response = await fetch(`${API_BASE}${path}`, {
+	const url = `${API_BASE}${path}`
+	console.log('🌐 API Request:', { url, method: options.method || 'GET' })
+	const response = await fetch(url, {
 		headers: {
 			'Content-Type': 'application/json',
 			...(options.headers || {}),
@@ -16,6 +18,7 @@ async function apiRequest(path, options = {}) {
 	})
 
 	const data = await response.json().catch(() => ({}))
+	console.log('📦 API Response:', { status: response.status, data })
 	if (!response.ok) {
 		throw new Error(data.message || 'Request failed.')
 	}
@@ -54,16 +57,22 @@ export function AuthProvider({ children }) {
 
 	const signup = async (name, email, password) => {
 		try {
+			console.log('📝 Signup attempt:', { name, email })
 			const data = await apiRequest('/api/auth/signup', {
 				method: 'POST',
 				body: JSON.stringify({ name, email, password }),
 			})
 
+			console.log('✅ Signup response:', data)
 			const safeUser = data.data || data.user
+			if (!safeUser) {
+				throw new Error('Invalid response from server')
+			}
 			localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser))
 			setUser(safeUser)
 			return safeUser
 		} catch (err) {
+			console.error('❌ Signup error:', err.message)
 			// If backend is unavailable, continue with local fallback.
 			if (!/Failed to fetch|NetworkError|Load failed/i.test(String(err?.message || ''))) {
 				throw err
@@ -96,16 +105,22 @@ export function AuthProvider({ children }) {
 
 	const login = async (email, password) => {
 		try {
+			console.log('🔐 Login attempt:', { email })
 			const data = await apiRequest('/api/auth/login', {
 				method: 'POST',
 				body: JSON.stringify({ email, password }),
 			})
 
+			console.log('✅ Login response:', data)
 			const safeUser = data.data || data.user
+			if (!safeUser) {
+				throw new Error('Invalid response from server')
+			}
 			localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser))
 			setUser(safeUser)
 			return safeUser
 		} catch (err) {
+			console.error('❌ Login error:', err.message)
 			// If backend is unavailable, continue with local fallback.
 			if (!/Failed to fetch|NetworkError|Load failed/i.test(String(err?.message || ''))) {
 				throw err

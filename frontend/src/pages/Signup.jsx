@@ -41,7 +41,7 @@ export default function Signup({ setPage }) {
     setLoading(true)
     try {
       await signup(name, email, password)
-      goTo('/', 'home')
+      goTo('/login', 'login')
     } catch (err) {
       const msg = err.message || String(err)
       setError(msg)
